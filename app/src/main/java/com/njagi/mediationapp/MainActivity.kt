@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,13 +22,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.njagi.mediationapp.common.CardContent
+import com.njagi.mediationapp.common.FILTER_CONTENT_LIST
+import com.njagi.mediationapp.common.FilterContent
+import com.njagi.mediationapp.common.Mediation_Type_List
 import com.njagi.mediationapp.ui.theme.MediationAppTheme
-import org.w3c.dom.Text
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,17 +42,18 @@ class MainActivity : ComponentActivity() {
             MediationAppTheme {
                 Column(
                     modifier = Modifier
-                        .background(Color.Gray)
+                        .background(Color.LightGray)
                         .fillMaxSize()
 
                 ) {
                     HeaderProfileComponent()
+                    SearchInputBox()
+                    CardMediationComponent()
+
                 }
             }
         }
     }
-
-
 }
 
 @Composable
@@ -129,6 +137,68 @@ fun SearchInputBox() {
     )
 }
 
+@Composable
+fun FilterOptionsComponent(){
+ val filterOptions = FILTER_CONTENT_LIST
+
+    LazyRow(
+        modifier = Modifier.padding(top = 15.dp, start = 15.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ){
+        items(filterOptions.size){
+
+        }
+    }
+}
+
+@Composable
+fun FilterComponent(filter: FilterContent){
+
+}
+
+@Composable
+fun CardMediationComponent(){
+    val cardOptions = Mediation_Type_List
+
+    LazyColumn(
+        modifier = Modifier.padding(top = 15.dp, start = 15.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ){
+        items(cardOptions.size){
+      MeditationCard(cardContent = cardOptions[it])
+        }
+    }
+}
+
+@Composable
+fun MeditationCard( cardContent: CardContent){
+Card(
+    shape = RoundedCornerShape(14.dp),
+    modifier = Modifier.fillMaxSize().padding(end=15.dp),
+    backgroundColor = cardContent.backcolor
+) {
+    Column(
+       verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.padding(20.dp)
+    ) {
+
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(text = cardContent.duration, fontSize = 15.sp)
+            Text(text = cardContent.teacher, fontSize = 15.sp)
+        }
+        
+        Text(text = cardContent.title, fontSize = 20.sp, fontStyle = FontStyle.Normal,
+           modifier = Modifier.padding(15.dp)
+            )
+        Text(text = cardContent.title, fontSize = 10.sp,
+            modifier = Modifier.padding(15.dp)
+        )
+    }
+
+}
+}
+
 @Preview(showBackground = true)
 @Composable
 fun HeaderPreview() {
@@ -136,7 +206,7 @@ fun HeaderPreview() {
         Column( modifier = Modifier.background(Color.LightGray)) {
             HeaderProfileComponent()
             SearchInputBox()
+            CardMediationComponent()
         }
-
     }
 }
